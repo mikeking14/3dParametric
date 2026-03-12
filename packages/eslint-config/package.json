@@ -1,0 +1,10 @@
+{
+  "name": "@repo/eslint-config",
+  "private": true,
+  "dependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "^15",
+    "typescript-eslint": "^8"
+  },
+  "files": ["*.js"]
+}

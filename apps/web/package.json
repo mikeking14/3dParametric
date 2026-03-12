@@ -1,0 +1,44 @@
+{
+  "name": "@repo/web",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@react-three/drei": "^10",
+    "@react-three/fiber": "^9",
+    "@repo/db": "workspace:*",
+    "@repo/parameter-parser": "workspace:*",
+    "@repo/shared-types": "workspace:*",
+    "bcryptjs": "^3.0.3",
+    "iron-session": "^8.0.4",
+    "next": "^15",
+    "openscad-wasm": "^0.0.4",
+    "react": "^19",
+    "react-dom": "^19",
+    "three": "^0.172",
+    "zustand": "^5"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/tsconfig": "workspace:*",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/bcryptjs": "^3.0.0",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.172",
+    "autoprefixer": "^10",
+    "postcss": "^8",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^3"
+  }
+}
