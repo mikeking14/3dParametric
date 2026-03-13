@@ -18,7 +18,7 @@ FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/ ./
 COPY . .
-RUN npx prisma generate --schema=packages/db/prisma/schema.prisma
+RUN pnpm exec prisma generate --schema=packages/db/prisma/schema.prisma
 RUN pnpm --filter @repo/web build
 
 # --- Production stage ---
@@ -59,5 +59,5 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Run migrations then start the server
-CMD npx prisma migrate deploy --schema=./packages/db/prisma/schema.prisma && \
+CMD node_modules/.bin/prisma migrate deploy --schema=./packages/db/prisma/schema.prisma && \
     node apps/web/server.js
