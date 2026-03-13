@@ -14,3 +14,4 @@ coverage/
 test-results/
 playwright-report/
 .pnpm-store/
+temp_assets/
