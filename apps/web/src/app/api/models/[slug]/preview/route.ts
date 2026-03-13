@@ -15,6 +15,14 @@ function formatScadValue(value: ParameterValue): string {
   return String(value);
 }
 
+function formatPythonValue(value: ParameterValue): string {
+  if (typeof value === "boolean") return value ? "True" : "False";
+  if (typeof value === "number") return String(value);
+  if (typeof value === "string") return `"${value}"`;
+  if (Array.isArray(value)) return `[${value.join(", ")}]`;
+  return String(value);
+}
+
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
@@ -47,7 +55,7 @@ export async function POST(
     } else if (model.sourceType === "cadquery") {
       const source = readFileSync(model.sourceFile, "utf-8");
       const paramOverrides = Object.entries(modelParams || {})
-        .map(([k, v]) => `${k} = ${JSON.stringify(v)}`)
+        .map(([k, v]) => `${k} = ${formatPythonValue(v)}`)
         .join("\n");
 
       const wrapper = `

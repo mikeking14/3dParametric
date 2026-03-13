@@ -14,6 +14,14 @@ function formatScadValue(value: ParameterValue): string {
   return String(value);
 }
 
+function formatPythonValue(value: ParameterValue): string {
+  if (typeof value === "boolean") return value ? "True" : "False";
+  if (typeof value === "number") return String(value);
+  if (typeof value === "string") return `"${value}"`;
+  if (Array.isArray(value)) return `[${value.join(", ")}]`;
+  return String(value);
+}
+
 export function buildOpenScadArgs(
   sourceFile: string,
   params: Record<string, ParameterValue>,
@@ -55,7 +63,7 @@ export async function runExport(
     } else if (model.sourceType === "cadquery") {
       // Build a wrapper script that injects params and exports
       const paramOverrides = Object.entries(params)
-        .map(([k, v]) => `${k} = ${JSON.stringify(v)}`)
+        .map(([k, v]) => `${k} = ${formatPythonValue(v)}`)
         .join("\n");
 
       const wrapper = `
