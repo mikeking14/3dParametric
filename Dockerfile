@@ -46,7 +46,12 @@ COPY --from=build /app/apps/web/public ./apps/web/public
 
 # Copy Prisma schema for runtime migrations, and install Prisma CLI
 COPY --from=build /app/packages/db/prisma ./packages/db/prisma
-RUN npm install --no-save prisma@6 @prisma/client@6
+RUN npm install --no-save prisma@6 @prisma/client@6 && \
+    npx prisma generate --schema=./packages/db/prisma/schema.prisma
+
+# Copy Prisma query engine into locations Next.js standalone expects
+RUN cp node_modules/.prisma/client/*.node apps/web/.next/server/ 2>/dev/null || true
+RUN cp node_modules/.prisma/client/*.node node_modules/.prisma/client/ 2>/dev/null || true
 
 # Create storage directories
 RUN mkdir -p storage/models storage/exports storage/previews
