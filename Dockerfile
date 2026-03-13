@@ -39,17 +39,14 @@ ENV PATH="/opt/cadquery-env/bin:$PATH"
 
 WORKDIR /app
 
-# Copy Next.js standalone build
+# Copy Next.js standalone build (includes bundled node_modules)
 COPY --from=build /app/apps/web/.next/standalone ./
 COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build /app/apps/web/public ./apps/web/public
 
-# Copy Prisma engine + schema for runtime migrations
+# Copy Prisma schema for runtime migrations, and install Prisma CLI
 COPY --from=build /app/packages/db/prisma ./packages/db/prisma
-COPY --from=build /app/node_modules/.pnpm ./node_modules/.pnpm
-COPY --from=build /app/node_modules/.modules.yaml ./node_modules/.modules.yaml
-COPY --from=build /app/node_modules/prisma ./node_modules/prisma
-COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
+RUN npm install --no-save prisma@6 @prisma/client@6
 
 # Create storage directories
 RUN mkdir -p storage/models storage/exports storage/previews
@@ -59,5 +56,5 @@ ENV PORT=3000
 EXPOSE 3000
 
 # Run migrations then start the server
-CMD node_modules/.bin/prisma migrate deploy --schema=./packages/db/prisma/schema.prisma && \
+CMD npx prisma migrate deploy --schema=./packages/db/prisma/schema.prisma && \
     node apps/web/server.js
