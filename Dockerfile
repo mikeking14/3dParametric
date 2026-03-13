@@ -58,6 +58,7 @@ RUN mkdir -p storage/models storage/exports storage/previews
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 EXPOSE 3000
 
 # Run migrations then start the server
