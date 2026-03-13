@@ -18,7 +18,7 @@ FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/ ./
 COPY . .
-RUN pnpm exec prisma generate --schema=packages/db/prisma/schema.prisma
+RUN cd packages/db && pnpm exec prisma generate
 RUN pnpm --filter @repo/web build
 
 # --- Production stage ---
