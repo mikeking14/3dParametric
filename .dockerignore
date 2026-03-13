@@ -1,0 +1,13 @@
+node_modules/
+.next/
+.turbo/
+.git/
+.env
+.env.local
+.env.*.local
+storage/
+*.db
+*.db-journal
+.npmrc
+.pnpm-store/
+temp_assets/

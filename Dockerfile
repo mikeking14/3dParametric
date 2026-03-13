@@ -4,7 +4,7 @@ RUN corepack enable && corepack prepare pnpm@9.15.4 --activate
 # --- Dependencies stage ---
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* turbo.json .npmrc* ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml* turbo.json ./
 COPY packages/tsconfig/ packages/tsconfig/
 COPY packages/eslint-config/ packages/eslint-config/
 COPY packages/shared-types/package.json packages/shared-types/
@@ -18,7 +18,7 @@ FROM base AS build
 WORKDIR /app
 COPY --from=deps /app/ ./
 COPY . .
-RUN pnpm --filter @repo/db db:generate
+RUN npx prisma generate --schema=packages/db/prisma/schema.prisma
 RUN pnpm --filter @repo/web build
 
 # --- Production stage ---
@@ -44,11 +44,12 @@ COPY --from=build /app/apps/web/.next/standalone ./
 COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
 COPY --from=build /app/apps/web/public ./apps/web/public
 
-# Copy Prisma schema + migration files for runtime migration
+# Copy Prisma engine + schema for runtime migrations
 COPY --from=build /app/packages/db/prisma ./packages/db/prisma
-COPY --from=build /app/node_modules/.pnpm/@prisma+client*/node_modules/@prisma/client ./node_modules/@prisma/client
-COPY --from=build /app/node_modules/.pnpm/prisma*/node_modules/prisma ./node_modules/prisma
-COPY --from=build /app/node_modules/.pnpm/prisma*/node_modules/.bin/prisma ./node_modules/.bin/prisma
+COPY --from=build /app/node_modules/.pnpm ./node_modules/.pnpm
+COPY --from=build /app/node_modules/.modules.yaml ./node_modules/.modules.yaml
+COPY --from=build /app/node_modules/prisma ./node_modules/prisma
+COPY --from=build /app/node_modules/@prisma ./node_modules/@prisma
 
 # Create storage directories
 RUN mkdir -p storage/models storage/exports storage/previews
